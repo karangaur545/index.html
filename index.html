@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(to right, #6dd5fa, #2980b9);
+      color: #fff;
+    }
+
+    .weather-app {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .weather-app input {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .weather-app button {
+      padding: 10px 15px;
+      background: #3498db;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .weather-app button:hover {
+      background: #2980b9;
+    }
+
+    .weather-info {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .weather-info span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-app">
+    <h1>Weather App</h1>
+    <input type="text" id="location" placeholder="Enter location">
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="weather-info" id="weatherInfo"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById('location').value;
+      const apiKey = '00b344eac0b9415d84a160442252701';
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Location not found');
+        }
+
+        const data = await response.json();
+        const weatherInfo = document.getElementById('weatherInfo');
+
+        weatherInfo.innerHTML = `
+          <p>Temperature: <span>${data.current.temp_c}°C</span></p>
+          <p>Condition: <span>${data.current.condition.text}</span></p>
+          <p>Humidity: <span>${data.current.humidity}%</span></p>
+        `;
+      } catch (error) {
+        document.getElementById('weatherInfo').innerHTML = `<p style="color: red;">${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
